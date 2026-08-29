@@ -12,13 +12,11 @@ router.post('/register', async (req, res) => {
 
   try {
     if (!name || !email || !password) {
-      console.log("❌ Missing fields:", req.body);
       return res.status(400).json({ message: 'All fields are required' });
     }
 
     const userExist = await User.findOne({ email });
     if (userExist) {
-      console.log("⚠️ User already exists:", email);
       return res.status(400).json({ message: 'User already exists' });
     }
 
@@ -31,13 +29,13 @@ router.post('/register', async (req, res) => {
     });
 
     await newUser.save();
-    console.log("✅ New user registered:", email);
 
     res.status(201).json({ message: 'User registered successfully' });
 
   } catch (err) {
-    console.error("❌ Registration error:", err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error("Registration error:", err);
+    // Don't leak internal error details to the client
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
@@ -47,7 +45,7 @@ router.post('/login', async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: 'User not found' });
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
@@ -65,12 +63,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// ✅ Password change route
+// Password change route
 router.put('/change-password', authMiddleware, changePassword);
-
-// ✅ Debug test route
-router.get('/test', (req, res) => {
-  res.json({ message: 'Auth route working!' });
-});
 
 module.exports = router;

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
+import { resolveImageSrc } from "../utils/image";
+
+const CATEGORIES = ['DSLR', 'Mirrorless', 'Cinema', 'Lens', 'Lighting', 'Accessory'];
+
+const emptyForm = { title: '', description: '', pricePerDay: '', category: CATEGORIES[0], image: null };
 
 function AdminDashboard() {
   const [listings, setListings] = useState([]);
@@ -9,7 +14,7 @@ function AdminDashboard() {
   const [showUserModal, setShowUserModal] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ title: '', description: '', pricePerDay: '', image: null });
+  const [form, setForm] = useState(emptyForm);
   const [creating, setCreating] = useState(false);
   const navigate = useNavigate();
 
@@ -74,12 +79,18 @@ function AdminDashboard() {
 
   const handleEdit = (listing) => {
     setEditingId(listing._id);
-    setForm({ title: listing.title, description: listing.description, pricePerDay: listing.pricePerDay, image: null });
+    setForm({
+      title: listing.title,
+      description: listing.description,
+      pricePerDay: listing.pricePerDay,
+      category: listing.category || CATEGORIES[0],
+      image: null,
+    });
   };
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setForm({ title: '', description: '', pricePerDay: '', image: null });
+    setForm(emptyForm);
   };
 
   const handleUpdate = async (id) => {
@@ -88,6 +99,7 @@ function AdminDashboard() {
     data.append("title", form.title);
     data.append("description", form.description);
     data.append("pricePerDay", form.pricePerDay);
+    data.append("category", form.category);
     if (form.image) data.append("image", form.image);
 
     try {
@@ -107,6 +119,7 @@ function AdminDashboard() {
     data.append("title", form.title);
     data.append("description", form.description);
     data.append("pricePerDay", form.pricePerDay);
+    data.append("category", form.category);
     if (form.image) data.append("image", form.image);
 
     try {
@@ -115,7 +128,7 @@ function AdminDashboard() {
       });
       setListings(prev => [res.data, ...prev]);
       setCreating(false);
-      setForm({ title: '', description: '', pricePerDay: '', image: null });
+      setForm(emptyForm);
     } catch (err) {
       console.error("Creation failed", err);
     }
@@ -138,51 +151,67 @@ function AdminDashboard() {
     }
   };
 
-  return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-8">📊 Admin Dashboard</h1>
+  const inputClass = "w-full mb-2 p-2 border border-ink-200 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none text-sm";
 
-      <section className="mb-10">
+  return (
+    <div className="p-4 sm:p-6 py-10 max-w-7xl mx-auto">
+      <h1 className="font-display text-2xl sm:text-3xl text-center mb-10 text-ink-800">Admin Dashboard</h1>
+
+      <section className="mb-14">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
-          <h2 className="text-xl font-semibold">📷 Listings</h2>
-          <button onClick={() => setCreating(true)} className="bg-green-600 text-white px-3 py-1 rounded">+ New Listing</button>
+          <h2 className="font-display text-xl text-ink-800">Listings</h2>
+          <button onClick={() => setCreating(true)} className="bg-amber-400 hover:bg-amber-300 text-ink-900 font-semibold text-sm px-4 py-1.5 rounded-full transition-colors duration-200">+ New Listing</button>
         </div>
         {creating && (
-          <div className="border p-4 rounded mb-6">
-            <input type="text" placeholder="Title" className="w-full mb-2 p-1 border" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
-            <textarea placeholder="Description" className="w-full mb-2 p-1 border" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
-            <input type="number" placeholder="Price/Day" className="w-full mb-2 p-1 border" value={form.pricePerDay} onChange={e => setForm({ ...form, pricePerDay: e.target.value })} />
-            <input type="file" className="w-full mb-2" onChange={e => setForm({ ...form, image: e.target.files[0] })} />
+          <div className="border border-ink-200 p-4 rounded-md mb-6 bg-white">
+            <input type="text" placeholder="Title" className={inputClass} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
+            <textarea placeholder="Description" className={inputClass} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <input type="number" placeholder="Price/Day" className="w-full p-2 border border-ink-200 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none text-sm" value={form.pricePerDay} onChange={e => setForm({ ...form, pricePerDay: e.target.value })} />
+              <select className="w-full p-2 border border-ink-200 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none text-sm" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
+                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <input type="file" className="w-full mb-2 text-sm text-ink-500" onChange={e => setForm({ ...form, image: e.target.files[0] })} />
             <div className="flex gap-2">
-              <button onClick={handleCreate} className="bg-green-600 text-white px-4 py-1 rounded">Save</button>
-              <button onClick={() => setCreating(false)} className="bg-gray-400 text-white px-4 py-1 rounded">Cancel</button>
+              <button onClick={handleCreate} className="bg-amber-400 hover:bg-amber-300 text-ink-900 font-semibold px-4 py-1.5 rounded-full text-sm transition-colors duration-200">Save</button>
+              <button onClick={() => { setCreating(false); setForm(emptyForm); }} className="bg-ink-100 hover:bg-ink-200 text-ink-700 px-4 py-1.5 rounded-full text-sm transition-colors duration-200">Cancel</button>
             </div>
           </div>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {listings.map(listing => (
-            <div key={listing._id} className="p-4 border rounded shadow">
+            <div key={listing._id} className="p-4 border border-ink-200 rounded-md bg-white">
               {editingId === listing._id ? (
                 <>
-                  <input type="text" value={form.title} className="w-full mb-2 p-1 border" onChange={e => setForm({ ...form, title: e.target.value })} />
-                  <textarea value={form.description} className="w-full mb-2 p-1 border" onChange={e => setForm({ ...form, description: e.target.value })} />
-                  <input type="number" value={form.pricePerDay} className="w-full mb-2 p-1 border" onChange={e => setForm({ ...form, pricePerDay: e.target.value })} />
-                  <input type="file" className="w-full mb-2" onChange={e => setForm({ ...form, image: e.target.files[0] })} />
+                  <input type="text" value={form.title} className={inputClass} onChange={e => setForm({ ...form, title: e.target.value })} />
+                  <textarea value={form.description} className={inputClass} onChange={e => setForm({ ...form, description: e.target.value })} />
+                  <div className="grid grid-cols-2 gap-2 mb-2">
+                    <input type="number" value={form.pricePerDay} className="w-full p-2 border border-ink-200 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none text-sm" onChange={e => setForm({ ...form, pricePerDay: e.target.value })} />
+                    <select className="w-full p-2 border border-ink-200 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none text-sm" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
+                      {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <input type="file" className="w-full mb-2 text-sm text-ink-500" onChange={e => setForm({ ...form, image: e.target.files[0] })} />
                   <div className="flex gap-2">
-                    <button onClick={() => handleUpdate(listing._id)} className="bg-green-600 text-white px-4 py-1 rounded">Save</button>
-                    <button onClick={handleCancelEdit} className="bg-gray-400 text-white px-4 py-1 rounded">Cancel</button>
+                    <button onClick={() => handleUpdate(listing._id)} className="bg-amber-400 hover:bg-amber-300 text-ink-900 font-semibold px-4 py-1.5 rounded-full text-sm transition-colors duration-200">Save</button>
+                    <button onClick={handleCancelEdit} className="bg-ink-100 hover:bg-ink-200 text-ink-700 px-4 py-1.5 rounded-full text-sm transition-colors duration-200">Cancel</button>
                   </div>
                 </>
               ) : (
                 <>
-                  <img src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${listing.image}`} alt={listing.title} className="h-40 w-full object-contain mb-2 rounded" />
-                  <h3 className="font-bold">{listing.title}</h3>
-                  <p>{listing.description}</p>
-                  <p className="text-blue-600 font-semibold">{listing.pricePerDay.toLocaleString()}Ks / day</p>
-                  <p className="text-sm text-gray-600 mt-1">Category: {listing.category} | Created: {new Date(listing.createdAt).toLocaleString()}</p>
-                  <div className="flex gap-2 mt-2">
-                    <button onClick={() => handleEdit(listing)} className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">Edit</button>
-                    <button onClick={() => handleDeleteListing(listing._id)} className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                  <div className="h-40 w-full bg-white border border-ink-200 rounded-md overflow-hidden mb-3">
+                    {resolveImageSrc(listing.image) && (
+                      <img src={resolveImageSrc(listing.image)} alt={listing.title} className="h-full w-full object-cover" />
+                    )}
+                  </div>
+                  <h3 className="font-semibold text-ink-800">{listing.title}</h3>
+                  <p className="text-ink-500 text-sm mt-1 line-clamp-2">{listing.description}</p>
+                  <p className="text-ink-800 font-semibold mt-1">{listing.pricePerDay.toLocaleString()} Ks / day</p>
+                  <p className="text-xs text-ink-400 mt-1">Category: {listing.category} · Created {new Date(listing.createdAt).toLocaleDateString()}</p>
+                  <div className="flex gap-2 mt-3">
+                    <button onClick={() => handleEdit(listing)} className="px-3 py-1 bg-ink-100 hover:bg-ink-200 text-ink-700 rounded-full text-sm transition-colors duration-200">Edit</button>
+                    <button onClick={() => handleDeleteListing(listing._id)} className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-full text-sm transition-colors duration-200">Delete</button>
                   </div>
                 </>
               )}
@@ -191,28 +220,28 @@ function AdminDashboard() {
         </div>
       </section>
 
-      <section>
-        <h2 className="text-xl font-semibold mb-4">👥 Users</h2>
+      <section className="mb-14">
+        <h2 className="font-display text-xl mb-4 text-ink-800">Users</h2>
         <ul className="space-y-2">
           {users.map(user => (
-            <li key={user._id} className="p-4 border rounded shadow flex justify-between items-center">
+            <li key={user._id} className="p-4 border border-ink-200 rounded-md bg-white flex justify-between items-center flex-wrap gap-2">
               <div>
-                <p className="font-medium">{user.name} ({user.email})</p>
-                <p className="text-sm text-gray-600">{user.isAdmin ? 'Admin' : 'User'}</p>
+                <p className="font-medium text-ink-800">{user.name} <span className="text-ink-400 font-normal">({user.email})</span></p>
+                <p className="text-sm text-ink-500">{user.isAdmin ? 'Admin' : 'User'}</p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+              <div className="flex gap-2">
                 <button
                   onClick={() => {
                     setSelectedUser(user);
                     setShowUserModal(true);
                   }}
-                  className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="px-3 py-1 bg-ink-100 hover:bg-ink-200 text-ink-700 rounded-full text-sm transition-colors duration-200"
                 >
                   View
                 </button>
                 <button
                   onClick={() => handleDeleteUser(user._id)}
-                  className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-full text-sm transition-colors duration-200"
                 >
                   Delete
                 </button>
@@ -223,26 +252,32 @@ function AdminDashboard() {
       </section>
 
       {showUserModal && selectedUser && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-ink-900/60 z-50 px-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl text-center">
-            <h2 className="text-xl font-bold text-blue-700 mb-4">👤 User Details</h2>
-            <img
-              src={selectedUser.profileImage
-                ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/uploads/${selectedUser.profileImage}`
-                : "https://via.placeholder.com/96"}
-              alt="Profile"
-              className="w-24 h-24 mx-auto mb-4 rounded-full object-cover border shadow"
-            />
-            <p><strong>Name:</strong> {selectedUser.name}</p>
-            <p><strong>Email:</strong> {selectedUser.email}</p>
-            <p><strong>Phone:</strong> {selectedUser.phone || "N/A"}</p>
-            <p><strong>Address:</strong> {selectedUser.address || "N/A"}</p>
-            <p><strong>Joined:</strong> {new Date(selectedUser.createdAt).toLocaleString()}</p>
-            <p><strong>Role:</strong> {selectedUser.isAdmin ? "Admin" : "User"}</p>
-            <div className="mt-4 text-right">
+            <h2 className="font-display text-xl mb-4 text-ink-800">User Details</h2>
+            {resolveImageSrc(selectedUser.profileImage) ? (
+              <img
+                src={resolveImageSrc(selectedUser.profileImage)}
+                alt="Profile"
+                className="h-full w-full object-contain p-2"
+              />
+            ) : (
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center text-xl font-display text-amber-700">
+                {selectedUser.name?.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+            <div className="text-sm text-ink-700 space-y-1 text-left max-w-xs mx-auto">
+              <p><strong className="text-ink-800">Name:</strong> {selectedUser.name}</p>
+              <p><strong className="text-ink-800">Email:</strong> {selectedUser.email}</p>
+              <p><strong className="text-ink-800">Phone:</strong> {selectedUser.phone || "N/A"}</p>
+              <p><strong className="text-ink-800">Address:</strong> {selectedUser.address || "N/A"}</p>
+              <p><strong className="text-ink-800">Joined:</strong> {new Date(selectedUser.createdAt).toLocaleString()}</p>
+              <p><strong className="text-ink-800">Role:</strong> {selectedUser.isAdmin ? "Admin" : "User"}</p>
+            </div>
+            <div className="mt-5 text-right">
               <button
                 onClick={() => setShowUserModal(false)}
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded"
+                className="bg-ink-100 hover:bg-ink-200 text-ink-700 px-4 py-2 rounded-full text-sm transition-colors duration-200"
               >
                 Close
               </button>
@@ -251,26 +286,26 @@ function AdminDashboard() {
         </div>
       )}
 
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold mb-4">📅 Bookings</h2>
+      <section>
+        <h2 className="font-display text-xl mb-4 text-ink-800">Bookings</h2>
         <ul className="space-y-4">
           {bookings.map(booking => (
-            <li key={booking._id} className="border p-4 rounded shadow">
-              <p><strong>User:</strong> {booking.user?.name} ({booking.user?.email})</p>
-              <p><strong>Listing:</strong> {booking.listing?.title}</p>
-              <p><strong>Start:</strong> {new Date(booking.startDate).toLocaleDateString()}</p>
-              <p><strong>End:</strong> {new Date(booking.endDate).toLocaleDateString()}</p>
-              <p><strong>Payment:</strong> Cash on Delivery</p>
-              <p className="text-sm text-gray-500">Booked at: {new Date(booking.createdAt).toLocaleString()}</p>
-              <p className={`mt-1 font-semibold ${booking.status === 'Confirmed' ? 'text-green-600' : 'text-red-600'}`}>
+            <li key={booking._id} className="border border-ink-200 p-4 rounded-md bg-white">
+              <p className="text-sm text-ink-700"><strong className="text-ink-800">User:</strong> {booking.user?.name} ({booking.user?.email})</p>
+              <p className="text-sm text-ink-700"><strong className="text-ink-800">Listing:</strong> {booking.listing?.title}</p>
+              <p className="text-sm text-ink-700"><strong className="text-ink-800">Start:</strong> {new Date(booking.startDate).toLocaleDateString()}</p>
+              <p className="text-sm text-ink-700"><strong className="text-ink-800">End:</strong> {new Date(booking.endDate).toLocaleDateString()}</p>
+              <p className="text-sm text-ink-700"><strong className="text-ink-800">Payment:</strong> Cash on Delivery</p>
+              <p className="text-xs text-ink-400 mt-1">Booked at: {new Date(booking.createdAt).toLocaleString()}</p>
+              <p className={`mt-1 text-sm font-semibold ${booking.status === 'Confirmed' ? 'text-green-600' : 'text-amber-600'}`}>
                 Status: {booking.status}
               </p>
               <div className="flex items-center gap-2 mt-2">
-                <label className="font-semibold">Change Status:</label>
+                <label className="text-sm font-medium text-ink-700">Change Status:</label>
                 <select
                   value={booking.status}
                   onChange={(e) => handleStatusChange(booking._id, e.target.value)}
-                  className="border rounded px-2 py-1"
+                  className="border border-ink-200 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none"
                 >
                   <option value="Pending">Pending</option>
                   <option value="Confirmed">Confirmed</option>

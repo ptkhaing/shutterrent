@@ -4,30 +4,14 @@ const mongoose = require("mongoose");
 const Listing = require("../models/Listing");
 const { authMiddleware } = require("../middleware/auth");
 const adminCheck = require("../middleware/adminCheck");
-const multer = require("multer");
-
-// ⚠️ Replace with an actual user ID from your MongoDB
-const REAL_USER_ID = "688a27b4101acf49cef2701b";
-const realUserObjectId = new mongoose.Types.ObjectId(REAL_USER_ID);
-
-// Multer config for image upload
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueName = Date.now() + "-" + file.originalname;
-    cb(null, uniqueName);
-  },
-});
-const upload = multer({ storage: storage });
+const upload = require("../middleware/upload");
 
 // @route   POST /api/listings
 // @desc    Admin: Create new listing
 router.post("/", authMiddleware, adminCheck, upload.single("image"), async (req, res) => {
   try {
     const { title, description, pricePerDay, category } = req.body;
-    const image = req.file ? req.file.path : null;
+    const image = req.file ? `uploads/${req.file.filename}` : null;
 
     const listing = new Listing({
       user: req.user._id,
@@ -95,7 +79,7 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", authMiddleware, adminCheck, upload.single("image"), async (req, res) => {
   try {
     const { title, description, pricePerDay, category } = req.body;
-    const image = req.file ? req.file.path : undefined;
+    const image = req.file ? `uploads/${req.file.filename}` : undefined;
 
     const listing = await Listing.findById(req.params.id);
     if (!listing) return res.status(404).json({ message: "Listing not found" });
@@ -128,8 +112,8 @@ router.delete("/:id", authMiddleware, adminCheck, async (req, res) => {
 });
 
 // @route   POST /api/listings/seed
-// @desc    TEMP: Insert sample listings
-router.post("/seed", async (req, res) => {
+// @desc    Admin-only: insert sample listings (dev/demo convenience)
+router.post("/seed", authMiddleware, adminCheck, async (req, res) => {
   try {
     const sampleListings = [
       {
@@ -138,7 +122,7 @@ router.post("/seed", async (req, res) => {
         pricePerDay: 45000,
         image: "sample1.jpg",
         category: "DSLR",
-        user: realUserObjectId
+        user: req.user._id
       },
       {
         title: "Sony A7 III",
@@ -146,7 +130,7 @@ router.post("/seed", async (req, res) => {
         pricePerDay: 50000,
         image: "sample2.jpg",
         category: "Mirrorless",
-        user: realUserObjectId
+        user: req.user._id
       },
       {
         title: "Panasonic Lumix GH6",
@@ -154,12 +138,12 @@ router.post("/seed", async (req, res) => {
         pricePerDay: 60000,
         image: "sample3.jpg",
         category: "Cinema",
-        user: realUserObjectId
+        user: req.user._id
       }
     ];
 
     await Listing.insertMany(sampleListings);
-    res.json({ message: "✅ Sample listings inserted!" });
+    res.json({ message: "Sample listings inserted" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error seeding listings" });

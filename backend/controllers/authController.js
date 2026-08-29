@@ -17,27 +17,6 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const updateUserProfile = async (req, res) => {
-  try {
-    const { name, phone, address } = req.body;
-    const profileImage = req.file ? `uploads/${req.file.filename}` : undefined;
-
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    user.name = name || user.name;
-    user.phone = phone || user.phone;
-    user.address = address || user.address;
-    if (profileImage) user.profileImage = profileImage;
-
-    await user.save();
-    res.json({ message: "Profile updated successfully", user });
-  } catch (err) {
-    console.error("Update error:", err);
-    res.status(500).json({ message: "Failed to update profile" });
-  }
-};
-
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -61,6 +40,5 @@ const changePassword = async (req, res) => {
 
 module.exports = {
   getUserProfile,
-  updateUserProfile,
-  changePassword // ✅ add this
+  changePassword
 };

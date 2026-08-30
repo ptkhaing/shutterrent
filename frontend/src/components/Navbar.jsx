@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../hooks/useTheme";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const checkToken = () => {
@@ -41,7 +43,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="w-full px-6 py-4 bg-ink-900 text-ink-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sticky top-0 z-40">
+    <nav className="w-full px-6 py-4 bg-ink-900 dark:bg-ink-950 text-ink-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sticky top-0 z-40">
       <Link
         to="/"
         className="font-display text-2xl tracking-tight text-white hover:text-amber-300 transition-colors duration-200"
@@ -50,6 +52,23 @@ function Navbar() {
       </Link>
 
       <div className="flex flex-wrap items-center justify-start sm:justify-end gap-x-6 gap-y-2 text-sm font-medium">
+        <button
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          className="flex items-center justify-center h-8 w-8 rounded-full text-ink-200 hover:text-amber-300 hover:bg-ink-800 transition-colors duration-200"
+        >
+          {theme === "dark" ? (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
+              <circle cx="12" cy="12" r="4" />
+              <path strokeLinecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" />
+            </svg>
+          )}
+        </button>
+
         <Link to="/" className="text-ink-200 hover:text-amber-300 transition-colors duration-200">Home</Link>
 
         {!isAdmin && (

@@ -66,13 +66,13 @@ function Booking() {
     }
   }
 
-  if (!listing) return <p className="text-center mt-12 text-ink-500">Loading listing...</p>
+  if (!listing) return <p className="text-center mt-12 text-ink-500 dark:text-ink-400">Loading listing...</p>
 
   return (
     <div className="max-w-xl mx-auto p-6 py-12">
-      <h2 className="font-display text-2xl sm:text-3xl mb-6 text-center text-ink-800">{listing.title}</h2>
+      <h2 className="font-display text-2xl sm:text-3xl mb-6 text-center text-ink-800 dark:text-ink-100">{listing.title}</h2>
 
-      <div className="w-full h-64 bg-white border border-ink-200 rounded-md overflow-hidden mb-8">
+      <div className="w-full h-64 bg-white dark:bg-ink-800 border border-ink-200 dark:border-ink-700 rounded-md overflow-hidden mb-8">
         {resolveImageSrc(listing.image) && (
           <img
             src={resolveImageSrc(listing.image)}
@@ -100,7 +100,7 @@ function Booking() {
       >
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1 text-sm font-medium text-ink-700">Start Date</label>
+            <label className="block mb-1 text-sm font-medium text-ink-700 dark:text-ink-200">Start Date</label>
             <input
               type="date"
               value={startDate}
@@ -111,12 +111,12 @@ function Booking() {
                 if (endDate && e.target.value > endDate) setEndDate('')
               }}
               required
-              className="w-full border border-ink-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="w-full border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-800 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium text-ink-700">End Date</label>
+            <label className="block mb-1 text-sm font-medium text-ink-700 dark:text-ink-200">End Date</label>
             <input
               type="date"
               value={endDate}
@@ -124,7 +124,7 @@ function Booking() {
               onChange={(e) => setEndDate(e.target.value)}
               required
               disabled={!startDate}
-              className="w-full border border-ink-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:bg-ink-50"
+              className="w-full border border-ink-200 dark:border-ink-700 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white dark:bg-ink-800 disabled:bg-ink-50 dark:disabled:bg-ink-900"
             />
           </div>
         </div>
@@ -134,17 +134,17 @@ function Booking() {
         )}
 
         {datesValid && (
-          <div className="rounded-md bg-ink-50 border border-ink-200 p-4 flex justify-between items-center">
-            <span className="text-sm text-ink-600">
+          <div className="rounded-md bg-ink-50 dark:bg-ink-900 border border-ink-200 dark:border-ink-700 p-4 flex justify-between items-center">
+            <span className="text-sm text-ink-600 dark:text-ink-300">
               {nights} night{nights > 1 ? 's' : ''} × {listing.pricePerDay.toLocaleString()} Ks
             </span>
-            <span className="font-display text-lg text-ink-800">{total.toLocaleString()} Ks</span>
+            <span className="font-display text-lg text-ink-800 dark:text-ink-100">{total.toLocaleString()} Ks</span>
           </div>
         )}
 
         <div>
-          <label className="block mb-1 text-sm font-medium text-ink-700">Payment Method</label>
-          <div className="w-full border border-ink-200 p-2.5 rounded-md bg-ink-50 text-ink-600 text-sm">
+          <label className="block mb-1 text-sm font-medium text-ink-700 dark:text-ink-200">Payment Method</label>
+          <div className="w-full border border-ink-200 dark:border-ink-700 p-2.5 rounded-md bg-ink-50 dark:bg-ink-900 text-ink-600 dark:text-ink-300 text-sm">
             💵 Cash on Delivery (pay when the gear arrives)
           </div>
         </div>
@@ -157,7 +157,7 @@ function Booking() {
             onChange={(e) => setAgree(e.target.checked)}
             className="h-4 w-4 accent-amber-500"
           />
-          <label htmlFor="agree" className="text-sm text-ink-600">
+          <label htmlFor="agree" className="text-sm text-ink-600 dark:text-ink-300">
             I agree to pay in cash when the item is delivered
           </label>
         </div>
@@ -173,16 +173,16 @@ function Booking() {
 
       {showConfirm && (
         <div className="fixed inset-0 bg-ink-900/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm text-center">
-            <h3 className="font-display text-lg mb-3 text-ink-800">Confirm Booking</h3>
-            <p className="text-ink-600 mb-2 text-sm">
+          <div className="bg-white dark:bg-ink-800 p-6 rounded-lg shadow-lg w-full max-w-sm text-center">
+            <h3 className="font-display text-lg mb-3 text-ink-800 dark:text-ink-100">Confirm Booking</h3>
+            <p className="text-ink-600 dark:text-ink-300 mb-2 text-sm">
               {nights} night{nights > 1 ? 's' : ''} of <span className="font-medium">{listing.title}</span>
             </p>
-            <p className="font-display text-2xl mb-6 text-ink-800">{total.toLocaleString()} Ks</p>
+            <p className="font-display text-2xl mb-6 text-ink-800 dark:text-ink-100">{total.toLocaleString()} Ks</p>
             <div className="flex justify-center gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="bg-ink-100 text-ink-700 px-4 py-2 rounded-full hover:bg-ink-200 transition-colors duration-200"
+                className="bg-ink-100 dark:bg-ink-700 text-ink-700 dark:text-ink-200 px-4 py-2 rounded-full hover:bg-ink-200 dark:hover:bg-ink-600 transition-colors duration-200"
               >
                 Cancel
               </button>

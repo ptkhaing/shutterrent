@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -20,6 +21,7 @@ export default {
           700: "#2c2a26",
           800: "#1d1c19",
           900: "#121110",
+          950: "#0a0908",
         },
         amber: {
           50: "#fdf6ec",

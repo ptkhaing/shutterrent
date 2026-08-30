@@ -74,12 +74,12 @@ function AdminProfile() {
     }
   };
 
-  if (!admin) return <p className="text-center mt-12 text-ink-500">Loading...</p>;
+  if (!admin) return <p className="text-center mt-12 text-ink-500 dark:text-ink-400">Loading...</p>;
 
   return (
     <div className="flex justify-center px-4 py-12">
-      <div className="w-full max-w-xl bg-white p-8 rounded-xl shadow-sm border border-ink-100 text-center">
-        <h2 className="font-display text-2xl mb-4 text-ink-800">Admin Profile</h2>
+      <div className="w-full max-w-xl bg-white dark:bg-ink-800 p-8 rounded-xl shadow-sm border border-ink-100 dark:border-ink-700 text-center">
+        <h2 className="font-display text-2xl mb-4 text-ink-800 dark:text-ink-100">Admin Profile</h2>
 
         {resolveImageSrc(admin.profileImage) ? (
           <img
@@ -88,13 +88,13 @@ function AdminProfile() {
             className="w-28 h-28 mx-auto rounded-full object-cover shadow-sm"
           />
         ) : (
-          <div className="w-28 h-28 mx-auto rounded-full bg-amber-100 flex items-center justify-center text-2xl font-display text-amber-700 shadow-sm">
+          <div className="w-28 h-28 mx-auto rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-2xl font-display text-amber-700 dark:text-amber-300 shadow-sm">
             {admin.name?.slice(0, 2).toUpperCase()}
           </div>
         )}
 
-        <p className="mt-4 text-lg font-semibold text-ink-800">{admin.name}</p>
-        <p className="text-ink-500">{admin.email}</p>
+        <p className="mt-4 text-lg font-semibold text-ink-800 dark:text-ink-100">{admin.name}</p>
+        <p className="text-ink-500 dark:text-ink-400">{admin.email}</p>
 
         {editingImage && (
           <div className="mt-4 space-y-2">
@@ -104,7 +104,7 @@ function AdminProfile() {
                 setProfileImage(e.target.files[0]);
                 setPreviewImage(URL.createObjectURL(e.target.files[0]));
               }}
-              className="w-full text-sm text-ink-500"
+              className="w-full text-sm text-ink-500 dark:text-ink-400"
             />
             {previewImage && (
               <img
@@ -124,7 +124,7 @@ function AdminProfile() {
                   setEditingImage(false);
                   setPreviewImage(null);
                 }}
-                className="bg-ink-100 hover:bg-ink-200 text-ink-700 px-4 py-2 rounded-full transition-colors duration-200"
+                className="bg-ink-100 dark:bg-ink-700 hover:bg-ink-200 dark:hover:bg-ink-600 text-ink-700 dark:text-ink-200 px-4 py-2 rounded-full transition-colors duration-200"
               >
                 Cancel
               </button>
@@ -141,7 +141,7 @@ function AdminProfile() {
           </button>
           <button
             onClick={() => setShowPasswordForm(true)}
-            className="bg-ink-100 hover:bg-ink-200 text-ink-700 px-4 py-2 rounded-full transition-colors duration-200"
+            className="bg-ink-100 dark:bg-ink-700 hover:bg-ink-200 dark:hover:bg-ink-600 text-ink-700 dark:text-ink-200 px-4 py-2 rounded-full transition-colors duration-200"
           >
             Change Password
           </button>
@@ -160,7 +160,7 @@ function AdminProfile() {
                       ? "New Password"
                       : "Confirm New Password"
                   }
-                  className="w-full p-2 border border-ink-200 rounded-md pr-10 focus:ring-2 focus:ring-amber-400 focus:outline-none"
+                  className="w-full p-2 border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-800 rounded-md pr-10 focus:ring-2 focus:ring-amber-400 focus:outline-none"
                   value={passwords[field + "Password"] ?? passwords[field]}
                   onChange={(e) =>
                     setPasswords({ ...passwords, [field + "Password"]: e.target.value })
@@ -171,7 +171,7 @@ function AdminProfile() {
                   onClick={() =>
                     setShowPassword({ ...showPassword, [field]: !showPassword[field] })
                   }
-                  className="absolute right-2 top-2 text-sm text-amber-600"
+                  className="absolute right-2 top-2 text-sm text-amber-600 dark:text-amber-400"
                 >
                   {showPassword[field] ? "Hide" : "Show"}
                 </button>
@@ -189,7 +189,7 @@ function AdminProfile() {
                   setShowPasswordForm(false);
                   setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
                 }}
-                className="bg-ink-100 hover:bg-ink-200 text-ink-700 px-4 py-2 rounded-full transition-colors duration-200"
+                className="bg-ink-100 dark:bg-ink-700 hover:bg-ink-200 dark:hover:bg-ink-600 text-ink-700 dark:text-ink-200 px-4 py-2 rounded-full transition-colors duration-200"
               >
                 Cancel
               </button>

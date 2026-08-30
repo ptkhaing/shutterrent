@@ -47,7 +47,7 @@ function CreateListing() {
 
   return (
     <div className="max-w-xl mx-auto p-6 py-12">
-      <h2 className="font-display text-2xl sm:text-3xl mb-6 text-center text-ink-800">Create a New Listing</h2>
+      <h2 className="font-display text-2xl sm:text-3xl mb-6 text-center text-ink-800 dark:text-ink-100">Create a New Listing</h2>
 
       {error && (
         <p className="text-red-600 text-sm mb-4 bg-red-50 border border-red-200 rounded-md py-2 text-center">{error}</p>
@@ -57,7 +57,7 @@ function CreateListing() {
         <input
           type="text"
           placeholder="Camera Title"
-          className="w-full border border-ink-200 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+          className="w-full border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-800 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -65,7 +65,7 @@ function CreateListing() {
 
         <textarea
           placeholder="Description"
-          className="w-full border border-ink-200 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+          className="w-full border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-800 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
@@ -75,7 +75,7 @@ function CreateListing() {
           <input
             type="number"
             placeholder="Price per day (Ks)"
-            className="w-full border border-ink-200 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+            className="w-full border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-800 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
             value={pricePerDay}
             onChange={(e) => setPricePerDay(e.target.value)}
             required
@@ -83,7 +83,7 @@ function CreateListing() {
           />
 
           <select
-            className="w-full border border-ink-200 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+            className="w-full border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-800 p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -96,7 +96,7 @@ function CreateListing() {
         <input
           type="file"
           accept="image/*"
-          className="w-full text-sm text-ink-500"
+          className="w-full text-sm text-ink-500 dark:text-ink-400"
           onChange={(e) => setImage(e.target.files[0])}
         />
 

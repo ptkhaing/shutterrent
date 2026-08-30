@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-  @apply font-sans text-ink-800;
+  @apply font-sans text-ink-800 bg-white dark:bg-ink-950 dark:text-ink-100 transition-colors duration-200;
 }

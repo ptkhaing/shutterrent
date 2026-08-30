@@ -54,16 +54,16 @@ function Listings() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-14">
-      <h2 className="font-display text-3xl sm:text-4xl text-center mb-2 text-ink-800">Browse Gear</h2>
-      <p className="text-center text-ink-500 mb-10">Cameras, lenses and lighting, ready to rent by the day.</p>
+      <h2 className="font-display text-3xl sm:text-4xl text-center mb-2 text-ink-800 dark:text-ink-100">Browse Gear</h2>
+      <p className="text-center text-ink-500 dark:text-ink-400 mb-10">Cameras, lenses and lighting, ready to rent by the day.</p>
 
       <div className="mb-10 flex gap-3 flex-wrap justify-center">
         <button
           onClick={() => handleCategoryClick('')}
           className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-colors duration-200 ${
             selectedCategory === ''
-              ? 'bg-ink-900 text-white border-ink-900'
-              : 'bg-white text-ink-600 border-ink-200 hover:border-ink-400'
+              ? 'bg-ink-900 text-white border-ink-900 dark:bg-amber-400 dark:text-ink-900 dark:border-amber-400'
+              : 'bg-white dark:bg-ink-800 text-ink-600 dark:text-ink-300 border-ink-200 dark:border-ink-700 hover:border-ink-400 dark:hover:border-ink-500'
           }`}
         >
           All
@@ -74,8 +74,8 @@ function Listings() {
             onClick={() => handleCategoryClick(cat)}
             className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-colors duration-200 ${
               selectedCategory === cat
-                ? 'bg-ink-900 text-white border-ink-900'
-                : 'bg-white text-ink-600 border-ink-200 hover:border-ink-400'
+                ? 'bg-ink-900 text-white border-ink-900 dark:bg-amber-400 dark:text-ink-900 dark:border-amber-400'
+                : 'bg-white dark:bg-ink-800 text-ink-600 dark:text-ink-300 border-ink-200 dark:border-ink-700 hover:border-ink-400 dark:hover:border-ink-500'
             }`}
           >
             {cat}
@@ -87,19 +87,19 @@ function Listings() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="animate-pulse">
-              <div className="w-full h-56 bg-ink-100 rounded-md mb-4" />
-              <div className="h-4 bg-ink-100 rounded w-2/3 mb-2" />
-              <div className="h-3 bg-ink-100 rounded w-1/3" />
+              <div className="w-full h-56 bg-ink-100 dark:bg-ink-700 rounded-md mb-4" />
+              <div className="h-4 bg-ink-100 dark:bg-ink-700 rounded w-2/3 mb-2" />
+              <div className="h-3 bg-ink-100 dark:bg-ink-700 rounded w-1/3" />
             </div>
           ))}
         </div>
       ) : listings.length === 0 ? (
-        <p className="text-center text-ink-400 py-16">No gear matches this category yet — try another one.</p>
+        <p className="text-center text-ink-400 dark:text-ink-500 py-16">No gear matches this category yet — try another one.</p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {listings.map((listing) => (
             <div key={listing._id} className="group">
-              <div className="w-full h-56 bg-white border border-ink-200 rounded-md overflow-hidden mb-4">
+              <div className="w-full h-56 bg-white dark:bg-ink-800 border border-ink-200 dark:border-ink-700 rounded-md overflow-hidden mb-4">
                 {resolveImageSrc(listing.image) && (
                   <img
                     src={resolveImageSrc(listing.image)}
@@ -108,11 +108,11 @@ function Listings() {
                   />
                 )}
               </div>
-              <h3 className="text-lg font-semibold text-ink-800">{listing.title}</h3>
-              <p className="text-ink-500 text-sm mt-1 line-clamp-2">{listing.description}</p>
+              <h3 className="text-lg font-semibold text-ink-800 dark:text-ink-100">{listing.title}</h3>
+              <p className="text-ink-500 dark:text-ink-400 text-sm mt-1 line-clamp-2">{listing.description}</p>
               <div className="flex items-center justify-between mt-3">
-                <p className="font-semibold text-ink-800">
-                  {listing.pricePerDay.toLocaleString()}<span className="text-ink-400 font-normal text-sm"> Ks / day</span>
+                <p className="font-semibold text-ink-800 dark:text-ink-100">
+                  {listing.pricePerDay.toLocaleString()}<span className="text-ink-400 dark:text-ink-500 font-normal text-sm"> Ks / day</span>
                 </p>
                 <button
                   onClick={() => handleBookClick(listing._id)}

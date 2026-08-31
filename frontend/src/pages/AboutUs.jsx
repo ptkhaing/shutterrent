@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import heroImage from '../assets/hero.jpg';
+import api from '../api';
+import { resolveImageSrc } from '../utils/image';
 
 const VALUES = [
   {
@@ -49,6 +51,14 @@ const STATS = [
 ];
 
 function AboutUs() {
+  const [founder, setFounder] = useState(null);
+
+  useEffect(() => {
+    api.get('/user/founder')
+      .then((res) => setFounder(res.data))
+      .catch(() => setFounder(null)); // fine to fail silently — falls back to initials
+  }, []);
+
   return (
     <div className="bg-white dark:bg-ink-950 min-h-screen">
       {/* Hero */}
@@ -76,9 +86,17 @@ function AboutUs() {
       {/* Founder / story split */}
       <div className="max-w-5xl mx-auto px-4 py-20 grid sm:grid-cols-5 gap-12 items-center">
         <div className="sm:col-span-2 flex justify-center">
-          <div className="w-40 h-40 sm:w-52 sm:h-52 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-5xl font-display text-amber-700 dark:text-amber-300 shadow-sm">
-            PK
-          </div>
+          {founder && resolveImageSrc(founder.profileImage) ? (
+            <img
+              src={resolveImageSrc(founder.profileImage)}
+              alt={founder.name || 'Founder'}
+              className="w-40 h-40 sm:w-52 sm:h-52 rounded-full object-cover shadow-sm"
+            />
+          ) : (
+            <div className="w-40 h-40 sm:w-52 sm:h-52 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-5xl font-display text-amber-700 dark:text-amber-300 shadow-sm">
+              {founder?.name ? founder.name.slice(0, 2).toUpperCase() : 'PK'}
+            </div>
+          )}
         </div>
         <div className="sm:col-span-3">
           <p className="uppercase tracking-[0.2em] text-amber-500 text-xs mb-3">From the Founder</p>

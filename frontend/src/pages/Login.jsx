@@ -21,7 +21,7 @@ function Login() {
       const isAdmin = decoded.isAdmin;
 
       if (isAdmin) {
-        navigate('/admin-profile');
+        navigate('/admin');
       } else {
         navigate('/profile');
       }

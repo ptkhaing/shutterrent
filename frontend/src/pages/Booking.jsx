@@ -72,7 +72,7 @@ function Booking() {
     <div className="max-w-xl mx-auto p-6 py-12">
       <h2 className="font-display text-2xl sm:text-3xl mb-6 text-center text-ink-800 dark:text-ink-100">{listing.title}</h2>
 
-      <div className="w-full h-64 bg-white dark:bg-ink-800 border border-ink-200 dark:border-ink-700 rounded-md overflow-hidden mb-8">
+      <div className="w-full h-64 bg-white border border-ink-200 dark:border-ink-600 rounded-md overflow-hidden mb-8 shadow-sm">
         {resolveImageSrc(listing.image) && (
           <img
             src={resolveImageSrc(listing.image)}

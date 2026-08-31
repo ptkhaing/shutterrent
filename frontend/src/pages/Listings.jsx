@@ -99,7 +99,7 @@ function Listings() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {listings.map((listing) => (
             <div key={listing._id} className="group">
-              <div className="w-full h-56 bg-white dark:bg-ink-800 border border-ink-200 dark:border-ink-700 rounded-md overflow-hidden mb-4">
+              <div className="w-full h-56 bg-white border border-ink-200 dark:border-ink-600 rounded-md overflow-hidden mb-4 shadow-sm">
                 {resolveImageSrc(listing.image) && (
                   <img
                     src={resolveImageSrc(listing.image)}

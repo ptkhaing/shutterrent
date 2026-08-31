@@ -200,7 +200,7 @@ function AdminDashboard() {
                 </>
               ) : (
                 <>
-                  <div className="h-40 w-full bg-white dark:bg-ink-800 border border-ink-200 dark:border-ink-700 rounded-md overflow-hidden mb-3">
+                  <div className="h-40 w-full bg-white border border-ink-200 dark:border-ink-600 rounded-md overflow-hidden mb-3 shadow-sm">
                     {resolveImageSrc(listing.image) && (
                       <img src={resolveImageSrc(listing.image)} alt={listing.title} className="h-full w-full object-cover" />
                     )}

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Listing = require("../models/Listing");
+const Booking = require("../models/Booking");
 const { authMiddleware } = require("../middleware/auth");
 const adminCheck = require("../middleware/adminCheck");
 const upload = require("../middleware/upload");
@@ -58,13 +59,14 @@ router.delete("/users/:id", authMiddleware, adminCheck, async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
+    // Remove this user's bookings too, so no orphaned records with a
+    // dangling user reference are left behind in the admin bookings list.
+    await Booking.deleteMany({ user: req.params.id });
     res.json({ message: "User deleted" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
-const Booking = require("../models/Booking");
-
 router.delete("/bookings/:id", authMiddleware, adminCheck, async (req, res) => {
   try {
     const booking = await Booking.findByIdAndDelete(req.params.id);
@@ -94,7 +96,12 @@ router.put("/bookings/:id/status", authMiddleware, adminCheck, async (req, res) 
 });
 router.get("/bookings", authMiddleware, adminCheck, async (req, res) => {
   try {
-    const bookings = await Booking.find()
+    // Hide bookings whose rental window has already ended, whether they were
+    // ever confirmed or not — no point cluttering the dashboard with the past.
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const bookings = await Booking.find({ endDate: { $gte: startOfToday } })
       .populate("user", "name email")
       .populate("listing", "title");
     res.json(bookings);

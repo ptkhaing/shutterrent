@@ -28,7 +28,7 @@ Demo account:
 **Backend:** Node.js, Express.js
 **Database:** MongoDB with Mongoose
 **Auth:** JWT, bcrypt
-**File uploads:** Multer (local disk storage)
+**File uploads:** Multer + Cloudinary (persistent cloud storage)
 **Deployment:** Vercel (frontend), Render (backend)
 
 ## Getting Started

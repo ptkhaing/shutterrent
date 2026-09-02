@@ -19,7 +19,7 @@ router.get("/listings", authMiddleware, adminCheck, async (req, res) => {
 router.put("/listings/:id", authMiddleware, adminCheck, upload.single("image"), async (req, res) => {
   try {
     const { title, description, pricePerDay } = req.body;
-    const image = req.file ? `uploads/${req.file.filename}` : undefined;
+    const image = req.file ? req.file.path : undefined;
 
     const listing = await Listing.findById(req.params.id);
     if (!listing) return res.status(404).json({ message: "Listing not found" });

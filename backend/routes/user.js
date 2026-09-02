@@ -31,7 +31,7 @@ router.put("/update", authMiddleware, upload.single("profileImage"), async (req,
     if (name) updates.name = name;
     if (phone) updates.phone = phone;
     if (address) updates.address = address;
-    if (req.file) updates.profileImage = `uploads/${req.file.filename}`;
+    if (req.file) updates.profileImage = req.file.path;
 
     const updatedUser = await User.findByIdAndUpdate(req.user.id, updates, {
       new: true,

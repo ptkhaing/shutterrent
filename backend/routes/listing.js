@@ -11,7 +11,7 @@ const upload = require("../middleware/upload");
 router.post("/", authMiddleware, adminCheck, upload.single("image"), async (req, res) => {
   try {
     const { title, description, pricePerDay, category } = req.body;
-    const image = req.file ? `uploads/${req.file.filename}` : null;
+    const image = req.file ? req.file.path : null;
 
     const listing = new Listing({
       user: req.user._id,
@@ -79,7 +79,7 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", authMiddleware, adminCheck, upload.single("image"), async (req, res) => {
   try {
     const { title, description, pricePerDay, category } = req.body;
-    const image = req.file ? `uploads/${req.file.filename}` : undefined;
+    const image = req.file ? req.file.path : undefined;
 
     const listing = await Listing.findById(req.params.id);
     if (!listing) return res.status(404).json({ message: "Listing not found" });

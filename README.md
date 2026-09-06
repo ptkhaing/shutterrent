@@ -4,7 +4,7 @@ ShutterRent is a full-stack web application for renting photography equipment â€
 
 Built with the **MERN stack** (MongoDB, Express, React, Node.js), with JWT authentication, role-based access control, and a custom-designed UI.
 
-**[Live Demo](https://shutterrent-frontend.vercel.app)**
+**[Live Demo](https://shutterrent-ptk.vercel.app)**
 
 Demo account:
 - Email: `Demouser@gmail.com`

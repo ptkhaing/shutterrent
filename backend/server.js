@@ -13,11 +13,18 @@ const adminRoutes = require("./routes/admin");
 dotenv.config();
 const app = express();
 
+// CLIENT_URLS is a comma-separated list of allowed frontend origins, e.g.:
+// CLIENT_URLS=https://shutterrent-ptk.vercel.app,https://shutterrent-frontend.vercel.app
+// Falls back to localhost only if the env var isn't set, so local dev still works.
+const allowedOrigins = [
+  "http://localhost:5173",
+  ...(process.env.CLIENT_URLS
+    ? process.env.CLIENT_URLS.split(",").map((url) => url.trim())
+    : []),
+];
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-"https://shutterrent-frontend.vercel.app"
-  ],
+  origin: allowedOrigins,
   methods: "GET,POST,PUT,DELETE",
   credentials: true
 }));

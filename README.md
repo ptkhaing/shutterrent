@@ -41,8 +41,8 @@ Demo account:
 
 Clone the repo:
 ```bash
-git clone https://github.com/ptkhaing/ShutterRent.git
-cd ShutterRent
+git clone https://github.com/ptkhaing/shutterrent.git
+cd shutterrent
 ```
 
 **Backend:**

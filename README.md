@@ -65,7 +65,10 @@ Open the printed local URL (usually `http://localhost:5173`).
 
 ## Screenshots
 
-<img width="1725" height="968" alt="Screenshot 2026-08-29 at 8 34 37 PM" src="https://github.com/user-attachments/assets/11270e59-2b51-4f39-b572-f00c6f8cb741" />
+<img width="1463" height="805" alt="Screenshot 2026-10-06 at 12 46 19 AM" src="https://github.com/user-attachments/assets/93f600c0-a445-482d-aa0c-f52b9d9da423" />
+
+<img width="1264" height="327" alt="Screenshot 2026-10-06 at 12 47 09 AM" src="https://github.com/user-attachments/assets/d07b1c8e-af7e-47bb-8214-10bac7768444" />
+
 
 ## Project Structure
 

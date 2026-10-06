@@ -80,3 +80,5 @@ ShutterRent/
 ## Acknowledgments
 
 Originally built as part of the CET300 Computing Project, University of Sunderland (2025), and since revised with security fixes, UX improvements, and a full visual redesign.
+
+## License MIT — see [LICENSE](LICENSE) for details.

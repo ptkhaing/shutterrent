@@ -72,9 +72,11 @@ Open the printed local URL (usually `http://localhost:5173`).
 
 ## Project Structure
 
+```
 ShutterRent/
 ├── backend/ # Express API, MongoDB models, auth
 └── frontend/ # React app (Vite), Tailwind UI
+```
 
 
 ## Acknowledgments
